@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package laboratorio.pkg1;
+package Presentacion;
 
 import BusinessLogic.Carrera;
 import BusinessLogic.Curso;
