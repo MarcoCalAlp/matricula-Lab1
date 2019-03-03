@@ -198,7 +198,9 @@ AS
         curso_cursor types.ref_cursor; 
 BEGIN 
   OPEN curso_cursor FOR 
-       SELECT * FROM MATRICULA.curso l,MATRICULA.carrera d  WHERE l.nombre=Pnombre and l.codCarrera = d.codigo;
+       SELECT * FROM MATRICULA.curso l,MATRICULA.carrera d,MATRICULA.ciclo p
+       WHERE l.nombre=Pnombre and l.codCarrera = d.codigo and p.annio = l.cicloAnio and p.numero = l.cicloNumero;
+      
 RETURN curso_cursor; 
 END;
 /
@@ -210,7 +212,8 @@ AS
         curso_cursor types.ref_cursor; 
 BEGIN 
   OPEN curso_cursor FOR 
-       SELECT * FROM MATRICULA.curso l,MATRICULA.carrera d  WHERE l.codigo=Pcod and l.codCarrera = d.codigo;
+       SELECT * FROM MATRICULA.curso l,MATRICULA.carrera d,MATRICULA.ciclo p 
+       WHERE l.codigo=Pcod and l.codCarrera = d.codigo and p.annio = l.cicloAnio and p.numero = l.cicloNumero;
 RETURN curso_cursor; 
 END;
 /
@@ -221,7 +224,8 @@ AS
         curso_cursor types.ref_cursor; 
 BEGIN 
   OPEN curso_cursor FOR 
-       SELECT * FROM MATRICULA.curso l,MATRICULA.carrera d  WHERE l.codCarrera='INGSYS' and l.codCarrera = d.codigo; 
+       SELECT * FROM MATRICULA.curso l,MATRICULA.carrera d,MATRICULA.ciclo p
+       WHERE l.codCarrera=PcodCarr and l.codCarrera = d.codigo  and p.annio = l.cicloAnio and p.numero = l.cicloNumero; 
 RETURN curso_cursor; 
 END;
 /
