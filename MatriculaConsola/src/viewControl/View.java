@@ -326,7 +326,7 @@ public class View {
 
     private void BusqProfesCedula() throws GlobalException, NoDataException {
         Scanner teclado = new Scanner(System.in);
-        System.out.println("==>Digite el nombre del profesor");
+        System.out.println("==>Digite la cedula del profesor");
         String cedula = "";
         cedula = teclado.nextLine();
         List<Profesor> profesores = ModelProfesor.instance().profesXCedula(cedula);
@@ -445,19 +445,50 @@ public class View {
         System.out.println("Nombre:"+ i.getIdAlu().getNombre());
         System.out.println("Cedula:"+ i.getIdAlu().getCedula().getCedula());
         System.out.println("Telefono:"+ i.getIdAlu().getTelefono());
+        System.out.println("Email:"+ i.getIdAlu().getCedula().getEmail());
         System.out.println("Fech Nacimiento:"+ i.getIdAlu().getNacimiento());
         System.out.println("Fech De inscripcion:"+ i.getFechaInscripcion());
-        System.out.println("Fech Nacimiento:"+ i.getIdAlu().getNacimiento());
+        System.out.println("Carrera Matriculada:"+ i.getIdCarr().getNombre());;
         System.out.println("__________________________________________________");
         }
     }
 
-    private void BusqAlumnosCodigo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void BusqAlumnosCodigo() throws GlobalException, NoDataException {
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("==>Digite la cedula  del Alumno");
+        String cedula = "";
+        cedula = teclado.nextLine();
+        List<MatriculaCarrera> alumnos = ModelMatriculaCarrera.instance().matriculasXcedula(cedula);
+        for(MatriculaCarrera i: alumnos){
+        System.out.println("__________________________________________________");
+        System.out.println("Nombre:"+ i.getIdAlu().getNombre());
+        System.out.println("Cedula:"+ i.getIdAlu().getCedula().getCedula());
+        System.out.println("Telefono:"+ i.getIdAlu().getTelefono());
+        System.out.println("Email:"+ i.getIdAlu().getCedula().getEmail());
+        System.out.println("Fech Nacimiento:"+ i.getIdAlu().getNacimiento());
+        System.out.println("Fech De inscripcion:"+ i.getFechaInscripcion());
+        System.out.println("Carrera Matriculada:"+ i.getIdCarr().getNombre());
+        System.out.println("__________________________________________________");
+        }
     }
 
-    private void BusqAlumnoCarrera() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void BusqAlumnoCarrera() throws GlobalException, NoDataException {
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("==>Digite el codigo de Carrera donde desea buscar los alumnos");
+        String codCarrera = "";
+        codCarrera = teclado.nextLine();
+        List<MatriculaCarrera> alumnos = ModelMatriculaCarrera.instance().matriculasXcarrera(codCarrera);
+        for(MatriculaCarrera i: alumnos){
+        System.out.println("__________________________________________________");
+        System.out.println("Nombre:"+ i.getIdAlu().getNombre());
+        System.out.println("Cedula:"+ i.getIdAlu().getCedula().getCedula());
+        System.out.println("Telefono:"+ i.getIdAlu().getTelefono());
+        System.out.println("Email:"+ i.getIdAlu().getCedula().getEmail());
+        System.out.println("Fech Nacimiento:"+ i.getIdAlu().getNacimiento());
+        System.out.println("Fech De inscripcion:"+ i.getFechaInscripcion());
+        System.out.println("Carrera Matriculada:"+ i.getIdCarr().getNombre());
+        System.out.println("__________________________________________________");
+        }
     }
     
     
