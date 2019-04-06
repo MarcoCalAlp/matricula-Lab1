@@ -15,6 +15,9 @@ public class Usuario {
     private String email;
 
     public Usuario() {
+        cedula="";
+        clave="";
+        email="";
     }
 
     public Usuario(String cedula, String clave, String email) {
@@ -49,8 +52,9 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return "Usuario{" + "cedula=" + cedula + ", clave=" + clave + ", email=" + email + '}';
+        return "Cedula:" + this.cedula+"\n"+
+            "Email:" + this.email+"\n";
     }
     
-    
+   
 }

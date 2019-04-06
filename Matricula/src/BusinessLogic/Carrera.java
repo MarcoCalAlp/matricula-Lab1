@@ -22,6 +22,9 @@ public class Carrera {
     }
 
     public Carrera() {
+        codigo="";
+        nombre="";
+        titulo="";
     }
 
     public String getCodigo() {
@@ -50,8 +53,14 @@ public class Carrera {
 
     @Override
     public String toString() {
-        return "Carrera{" + "codigo=" + codigo + ", nombre=" + nombre + ", titulo=" + titulo + '}';
+        String carrera;
+        carrera = "Codigo de Carrera:" + this.codigo +"\n"+
+                "Nombre de Carrera:" + this.nombre + "\n"+
+                "Titulo de Carrera:" + this.titulo;
+        return carrera;
     }
+    
+    
     
     
 }

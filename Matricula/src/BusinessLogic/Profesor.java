@@ -16,6 +16,15 @@ public class Profesor {
     private String telefono;
 
     public Profesor() {
+        cedula= new Usuario();
+        nombre="";
+        telefono="";
+    }
+    
+    public Profesor(Usuario ced,String nom,String tel) {
+        this.cedula = ced;
+        this.nombre = nom;
+        this.telefono = tel;
     }
 
     public Usuario getCedula() {
@@ -44,8 +53,13 @@ public class Profesor {
 
     @Override
     public String toString() {
-        return "Profesor{" + "cedula=" + cedula + ", nombre=" + nombre + ", telefono=" + telefono + '}';
+        String profesor;
+        profesor = cedula.getCedula()+"\n"+
+                "Nombre del profesor:"+this.nombre+"\n"+
+                "Telefono del profesor:"+this.telefono+"\n";
+        return profesor;
     }
+    
     
     
         

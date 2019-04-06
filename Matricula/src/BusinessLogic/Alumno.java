@@ -18,6 +18,10 @@ public class Alumno {
     private Date nacimiento;
 
     public Alumno() {
+        cedula = new Usuario();
+        nombre = "";
+        telefono = "";
+        nacimiento = new Date(1712,1,1);
     }
 
     public Alumno(Usuario cedula, String nombre, String telefono, Date nacimiento) {
@@ -61,8 +65,16 @@ public class Alumno {
 
     @Override
     public String toString() {
-        return "Alumno{" + "cedula=" + cedula + ", nombre=" + nombre + ", telefono=" + telefono + ", nacimiento=" + nacimiento + '}';
+      String alumno;
+      alumno = cedula +
+              "Nombre del Alumno:" + this.nombre +"\n"+
+              "Telefono:"+this.telefono +"\n"+
+              "Fecha de nacimiento"+this.getNacimiento();
+      return alumno;
     }
+    
+     
+    
     
     
     

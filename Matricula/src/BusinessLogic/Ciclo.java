@@ -19,6 +19,10 @@ private Date inicioD;
 private Date finalD;
 
     public Ciclo() {
+        annio=0;
+        numero=0;
+        inicioD= new Date(1917,1,1);
+        finalD= new Date(1917,6,1);
     }
 
     public Ciclo(Integer annio, Integer numero, Date inicioD, Date finalD) {
@@ -62,8 +66,13 @@ private Date finalD;
 
     @Override
     public String toString() {
-        return "Ciclo{" + "annio=" + annio + ", numero=" + numero + ", inicioD=" + inicioD + ", finalD=" + finalD + '}';
+        String ciclo;
+        ciclo = "Ciclo numero " + this.numero + "del año "+ this.annio+"\n"+
+                "Dia de inicio:"+this.inicioD+"\n"+
+                "Dia de finalizacion:"+this.finalD+"\n";
+        return ciclo;
     }
-
+    
+   
     
 }

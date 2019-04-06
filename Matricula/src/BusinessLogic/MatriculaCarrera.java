@@ -18,6 +18,15 @@ public class MatriculaCarrera {
     private Date fechaInscripcion;
 
     public MatriculaCarrera() {
+        idAlu = new Alumno();
+        idCarr = new Carrera();
+        fechaInscripcion = new Date(1917,1,1);
+    }
+    
+    public MatriculaCarrera(Alumno id,Carrera idC,Date d) {
+        this.idAlu = id;
+        this.idCarr = idC;
+        this.fechaInscripcion = d;
     }
 
     public Alumno getIdAlu() {
@@ -46,8 +55,13 @@ public class MatriculaCarrera {
 
     @Override
     public String toString() {
-        return "MatriculaCarrera{" + "idAlu=" + idAlu + ", idCarr=" + idCarr + ", fechaInscripcion=" + fechaInscripcion + '}';
+        String matricula;
+        matricula= this.idAlu+"\n"+
+                this.idCarr+"\n"+
+                "Fecha de inscripcion:"+this.fechaInscripcion;
+        return matricula;   
     }
+    
     
     
     

@@ -17,6 +17,26 @@ public class Curso {
    private Integer creditos;
    private Integer horas;
 
+   public Curso() {
+       codigo="";
+       codCarrera = new Carrera();
+       cicloCurso = new Ciclo();
+       nombre="";
+       creditos=0;
+       horas=0;
+       
+    }
+   
+   public Curso(String cod,Carrera codC,Ciclo cicloC,String nom,Integer cred,Integer hor) {
+       this.codigo=cod;
+       this.codCarrera=codC;
+       this.cicloCurso=cicloC;
+       this.nombre=nom;
+       this.creditos=cred;
+       this.horas=hor;
+    }
+   
+   
     public Ciclo getCicloCurso() {
         return cicloCurso;
     }
@@ -25,8 +45,7 @@ public class Curso {
         this.cicloCurso = cicloCurso;
     }
    
-    public Curso() {
-    }
+    
 
     public String getCodigo() {
         return codigo;
@@ -67,6 +86,19 @@ public class Curso {
 
     public void setHoras(Integer horas) {
         this.horas = horas;
+    }
+    
+    
+   @Override
+    public String toString(){
+        String curso;
+        curso = "Codigo de curso:"+ this.getCodigo()+"\n"+
+                "Nombre de curso:"+ this.getNombre()+"\n"+
+                "Creditos de curso:"+this.getCreditos()+"\n"+
+                "Horas de curso:"+this.getHoras()+"\n"+
+                "Ciclo perteneciente:"+this.getCicloCurso().getNumero()+ "del año "+ this.cicloCurso.getAnnio()+"\n"+        
+                "Carrera Perteneciente:"+ this.getCodCarrera().getNombre();
+        return curso;      
     }
    
    
