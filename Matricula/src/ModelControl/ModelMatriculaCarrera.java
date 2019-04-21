@@ -5,11 +5,15 @@
  */
 package ModelControl;
 
+import BusinessLogic.Alumno;
+import BusinessLogic.Carrera;
 import BusinessLogic.MatriculaCarrera;
+import BusinessLogic.Usuario;
 import DataAccess.GlobalException;
 import DataAccess.NoDataException;
 import DataAccess.servicioMatriculaCarrera;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -47,5 +51,21 @@ public class ModelMatriculaCarrera {
     public List<MatriculaCarrera> matriculasXcarrera(String codCarrera) throws GlobalException, NoDataException {
        return smc.obtenerMatriculasCarrera(codCarrera);
         
+    }
+    
+    public void insertaAlumnos(Usuario u ,Carrera c,Alumno a,Date d) throws GlobalException, NoDataException{
+       smc.insertarUsuario(u.getCedula(),u.getClave(),u.getEmail());
+       smc.insertarAlumno(u.getCedula(),a.getNombre(),a.getTelefono(),a.getNacimiento());
+       smc.insertarMatrCarr(u.getCedula(),c.getCodigo(),d);
+    }
+    
+    public void eliminarAlumnos(String idAlumn,String idCarr) throws GlobalException, NoDataException{
+        smc.eliminarMatriculaCarr(idAlumn,idCarr);
+        smc.eliminarAlumns(idAlumn);
+        smc.eliminarUsuario(idAlumn);
+    }
+    
+    public void actualizaAlumnos(String ced,String name, String tel, Date nac) throws GlobalException, NoDataException{
+        smc.actualizaAlumno(ced, name, tel, nac);
     }
 }

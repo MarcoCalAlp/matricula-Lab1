@@ -20,6 +20,9 @@ import oracle.jdbc.OracleTypes;
 public class servicioCarrera extends Servicio {
     private static final String CARRERASXNOM= "{?= call carrerasXnom(?)}";
     private static final String CARRERASXCOD= "{?= call carrerasXcod(?)}";
+    private static final String DELETECARRERAS= "{ call remover_Carr(?)}";
+    private static final String INSERTARCARRERAS= "{ call inserta_carrera(?,?,?)}";
+    private static final String ACTUALIZARCARRERAS= "{ call actualiza_carrera(?,?,?)}";
     
     
     /** Creates a new instance of servicioCarrera */
@@ -120,6 +123,116 @@ public class servicioCarrera extends Servicio {
         return carr;
         
     }
+    
+    //===========INSERTAR CARRERAS
+    
+    public void insertarCarrera(String codCarr,String nomCarr,String titulo) throws GlobalException, NoDataException {
+        try {
+            conectar();
+        } catch (ClassNotFoundException e) {
+            throw new GlobalException("No se ha localizado el driver");
+        } catch (SQLException e) {
+            throw new NoDataException("La base de datos no se encuentra disponible");
+        }
+        
+        CallableStatement pstmt=null;
+        try {
+            pstmt = conexion.prepareCall(INSERTARCARRERAS);
+            pstmt.setString(1, codCarr);
+	    pstmt.setString(2, nomCarr);
+            pstmt.setString(3, titulo);
+            boolean resultado = pstmt.execute();
+            if (resultado == true) {
+                throw new NoDataException("No se realizo la insercion de la carrera");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new GlobalException("No existe la carrera");
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                desconectar();
+            } catch (SQLException e) {
+                throw new GlobalException("Estatutos invalidos o nulos");
+            }
+        }   
+        
+    }
+    
+    //=================ACTULIZAR CARRERAS
+     public void actualizarCarrera(String codCarr,String nomCarr,String titulo) throws GlobalException, NoDataException {
+   
+        try {
+            conectar();
+        } catch (ClassNotFoundException e) {
+            throw new GlobalException("No se ha localizado el driver");
+        } catch (SQLException e) {
+            throw new NoDataException("La base de datos no se encuentra disponible");
+        }
+        //------
+        CallableStatement pstmt=null;
+        try {
+            pstmt = conexion.prepareCall(ACTUALIZARCARRERAS);
+            pstmt.setString(1, codCarr);
+	    pstmt.setString(2, nomCarr);
+            pstmt.setString(3, titulo);
+            boolean resultado = pstmt.execute();
+            if (resultado == true) {
+                throw new NoDataException("No se realizo la modificacion de la carrera");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new GlobalException("No existe la carrera");
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                desconectar();
+            } catch (SQLException e) {
+                throw new GlobalException("Estatutos invalidos o nulos");
+            }
+        }   
+        
+    }
+    //====================ELIMINAR CARRERAS================================
+    public void eliminarCarrera(String codigo) throws GlobalException, NoDataException {       
+
+        try {
+            conectar();
+        } catch (ClassNotFoundException e) {
+            throw new GlobalException("No se ha localizado el driver");
+        } catch (SQLException e) {
+            throw new NoDataException("La base de datos no se encuentra disponible");
+        }
+        CallableStatement pstmt=null;
+        try {
+            pstmt = conexion.prepareCall(DELETECARRERAS);
+            pstmt.setString(1, codigo);
+             boolean resultado = pstmt.execute();
+            if (resultado == true) {
+                throw new NoDataException("No se realizo la eliminacion de la carrera");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new GlobalException("No existe la carrera");
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                desconectar();
+            } catch (SQLException e) {
+                throw new GlobalException("Estatutos invalidos o nulos");
+            }
+        }       
+    }
+    
      //============================CONVERSOR DE RESULTSET A CARRERA====================================
      private Carrera carrera(ResultSet rs){
         try{

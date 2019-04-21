@@ -44,4 +44,16 @@ public class ModelCarrera {
         return sc.obtenerCarrerasCodigo(codigo);
     }
     
+    public void insertaCarrera(Carrera e) throws GlobalException, NoDataException{
+        sc.insertarCarrera(e.getCodigo(),e.getNombre(),e.getTitulo());
+    }
+    
+    public void actualizaCarrera(Carrera e) throws GlobalException, NoDataException{
+        sc.actualizarCarrera(e.getCodigo(),e.getNombre(),e.getTitulo());
+    }
+    
+    public void eliminaCarrera(String codigo) throws GlobalException, NoDataException{
+        sc.eliminarCarrera(codigo);
+    }
+    
 }

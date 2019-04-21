@@ -24,6 +24,11 @@ public class servicioCurso extends Servicio {
     private static final String CURSOSXNOM= "{?= call cursosXnom(?)}";
     private static final String CURSOSXCOD= "{?= call cursosXcodigo(?)}";
     private static final String CURSOSXCARRERA= "{?= call cursosXcarrera(?)}";
+    private static final String CICLOS= "{?= call seleciona_ciclos(?,?)}";
+    private static final String DELETECURSOS= "{ call remover_curso(?)}";
+    private static final String INSERTARCURSOS= "{ call inserta_curso(?,?,?,?,?,?,?)}";
+    private static final String ACTUALIZARCURSOS= "{ call actualiza_curso(?,?,?,?,?,?,?)}";
+    
 
     public servicioCurso() {
     }
@@ -125,7 +130,7 @@ public class servicioCurso extends Servicio {
     }
     
     //===========================OBTENER CURSOS POR CODIGO===================================
-    public List<Curso> obtenerCursosCodigo(String codigo) throws GlobalException, NoDataException {
+    public List obtenerCursosCodigo(String codigo) throws GlobalException, NoDataException {
         List<Curso> curs = new ArrayList<Curso>();
         CallableStatement pstmt=null;
          ResultSet rs = null;
@@ -172,6 +177,179 @@ public class servicioCurso extends Servicio {
         
     }
     
+    //===========================OBTENER CURSOS POR CODIGO===================================
+    public Ciclo obtenerCiclos(Integer num,Integer annio) throws GlobalException, NoDataException {
+        Ciclo clc= new Ciclo();
+        CallableStatement pstmt=null;
+         ResultSet rs = null;
+        //------
+        try {
+            conectar();
+        } catch (ClassNotFoundException e) {
+            throw new GlobalException("No se ha localizado el driver");
+        } catch (SQLException e) {
+            throw new NoDataException("La base de datos no se encuentra disponible");
+        }
+        //------
+        try {
+            pstmt = conexion.prepareCall(CICLOS);
+            pstmt.setInt(2, num);
+            pstmt.setInt(3, annio);
+	    pstmt.registerOutParameter(1, OracleTypes.CURSOR);
+            pstmt.executeUpdate();
+            rs = (ResultSet) pstmt.getObject(1);
+            while(rs.next()){
+               clc = cicloBasic(rs);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new GlobalException("No existen registros");
+        } 
+        finally {
+            try
+            {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                desconectar();
+            } 
+            catch (SQLException e) 
+            {
+                throw new GlobalException("Estatutos invalidos o nulos");
+            }
+        }
+        //Retorna la lista de carreras
+        return clc;
+        
+    }
+    
+    //===================================================================
+    public void insertarCursos(Curso c1) throws GlobalException, NoDataException {
+        try {
+            conectar();
+        } catch (ClassNotFoundException e) {
+            throw new GlobalException("No se ha localizado el driver");
+        } catch (SQLException e) {
+            throw new NoDataException("La base de datos no se encuentra disponible");
+        }
+        
+        CallableStatement pstmt=null;
+        //------
+        try {
+            pstmt = conexion.prepareCall(INSERTARCURSOS);
+            pstmt.setString(1, c1.getCodigo());
+	    pstmt.setString(2, c1.getCodCarrera().getCodigo());
+            pstmt.setInt(3, c1.getCicloCurso().getNumero());
+            pstmt.setInt(4, c1.getCicloCurso().getAnnio());
+            pstmt.setString(5, c1.getNombre());
+            pstmt.setInt(6, c1.getCreditos());
+            pstmt.setInt(7, c1.getHoras());
+            boolean resultado = pstmt.execute();
+            if (resultado == true) {
+                throw new NoDataException("No se realizo la inserci�n");
+            }
+       
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new GlobalException("Llave duplicada");
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                desconectar();
+            } catch (SQLException e) {
+                throw new GlobalException("Estatutos invalidos o nulos");
+            }
+        }
+        
+    }
+    
+    //===================================================================
+    public void actualizarCursos(String codigo,String codigoCarrera,Integer numCiclo,Integer cicloAnnio
+     ,String nombCurso,Integer creditos,Integer horas) throws GlobalException, NoDataException {
+        
+       
+        CallableStatement pstmt=null;
+         ResultSet rs = null;
+        //------
+        try {
+            conectar();
+        } catch (ClassNotFoundException e) {
+            throw new GlobalException("No se ha localizado el driver");
+        } catch (SQLException e) {
+            throw new NoDataException("La base de datos no se encuentra disponible");
+        }
+        //------
+        try {
+            pstmt = conexion.prepareCall(ACTUALIZARCURSOS);
+            pstmt.setString(1, codigo);
+	    pstmt.setString(2, codigoCarrera);
+            pstmt.setInt(3, numCiclo);
+            pstmt.setInt(4, cicloAnnio);
+            pstmt.setString(5, nombCurso);
+            pstmt.setInt(6, creditos);
+            pstmt.setInt(7, horas);
+            pstmt.executeUpdate();
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new GlobalException("No se puede ingresar la informacion");
+        } 
+        finally {
+            try
+            {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                desconectar();
+            } 
+            catch (SQLException e) 
+            {
+                throw new GlobalException("Estatutos invalidos o nulos");
+            }
+        }
+        
+    }
+    
+    //====================ELIMINAR CURSOS================================
+    public void eliminarCurso(String codigo) throws GlobalException, NoDataException {
+        //------
+        try {
+            conectar();
+        } catch (ClassNotFoundException e) {
+            throw new GlobalException("No se ha localizado el driver");
+        } catch (SQLException e) {
+            throw new NoDataException("La base de datos no se encuentra disponible");
+        }
+        
+        CallableStatement pstmt=null;
+        try {
+            pstmt = conexion.prepareCall(DELETECURSOS);
+            pstmt.setString(1, codigo);
+            boolean resultado = pstmt.execute();
+            if (resultado == true) {
+                throw new NoDataException("No se pudo remover el curso");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new GlobalException("Llave no encontrada");
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                desconectar();
+            } catch (SQLException e) {
+                throw new GlobalException("Estatutos invalidos o nulos");
+            }
+        } 
+    }
+    //==================================================================
+    
+    
     //============================CONVERSOR DE RESULTSET A CARRERA====================================
      private Carrera carrera(ResultSet rs){
         try{
@@ -186,7 +364,7 @@ public class servicioCurso extends Servicio {
         }
         
      }
-     //============================CONVERSOR DE RESULTSET A CARRERA====================================
+     //============================CONVERSOR DE RESULTSET A CICLO====================================
      private Ciclo ciclo(ResultSet rs){
         try{
             Ciclo ti = new Ciclo();
@@ -194,6 +372,21 @@ public class servicioCurso extends Servicio {
             ti.setNumero(rs.getInt(12));
             ti.setInicioD(rs.getDate(13));
             ti.setFinalD(rs.getDate(14));
+            return ti;
+        }
+        catch(SQLException e){
+            return null;
+        }
+        
+     }
+     
+     private Ciclo cicloBasic(ResultSet rs){
+        try{
+            Ciclo ti = new Ciclo();
+            ti.setAnnio(rs.getInt(1));
+            ti.setNumero(rs.getInt(2));
+            ti.setInicioD(rs.getDate(3));
+            ti.setFinalD(rs.getDate(4));
             return ti;
         }
         catch(SQLException e){

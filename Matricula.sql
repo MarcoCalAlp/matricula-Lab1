@@ -1,5 +1,5 @@
 
-conn system/root
+conn system/root;
 
 drop user matricula cascade;
 
@@ -25,7 +25,7 @@ grant create view to matricula;
 GRANT UNLIMITED TABLESPACE TO matricula;
 grant create sequence to matricula;
 PROMPT ====>Conectamos con matricula
-conn matricula/matricula123
+conn matricula/matricula123;
 
 --====================================================
 
@@ -81,6 +81,12 @@ RETURN carrera_cursor;
 END;
 /
 
+CREATE OR REPLACE PROCEDURE remover_Carr(Pcodigo IN carrera.codigo%TYPE) is
+BEGIN 
+        DELETE FROM carrera WHERE codigo = Pcodigo;
+END remover_Carr;
+/
+
 
 --====================================================
 create table ciclo(
@@ -91,11 +97,7 @@ finalD date
 )tablespace MATRICULA_DATOS;
 
 
-CREATE OR REPLACE PACKAGE types
-AS
-     TYPE ref_cursor IS REF CURSOR;
-END;
-/
+
 
 
 PROMPT Restricciones Tabla CICLO
@@ -113,6 +115,25 @@ begin
     update ciclo set inicioD = TO_DATE(PinicioD, 'dd/mm/yyyy') ,finalD = TO_DATE(Pfinal, 'dd/mm/yyyy') where annio = Pannio  and numero = Pnumero ;
 	commit;
 end actualiza_ciclo;
+/
+
+CREATE OR REPLACE PROCEDURE remover_ciclo(Pannio in ciclo.annio%TYPE,Pnumero in ciclo.numero%TYPE) is
+BEGIN 
+        DELETE FROM ciclo WHERE  annio = Pannio  and numero = Pnumero ;
+	commit;
+END remover_ciclo;
+/
+
+CREATE OR REPLACE FUNCTION seleciona_ciclos(Pnum in ciclo.numero%TYPE,Pannio in ciclo.annio%TYPE)
+RETURN Types.ref_cursor 
+AS 
+        ciclo_cursor types.ref_cursor; 
+BEGIN 
+  OPEN ciclo_cursor FOR 
+       SELECT * FROM MATRICULA.ciclo c
+       WHERE c.numero=Pnum and c.annio = Pannio;
+RETURN ciclo_cursor; 
+END;
 /
 
 
@@ -147,6 +168,13 @@ begin
     update usuario set clave = Pclave ,email = Pemail where cedula = PCed ;
 	commit;
 end actualiza_usuario;
+/
+
+CREATE OR REPLACE PROCEDURE remover_usuario(PCed in usuario.cedula%TYPE) is
+BEGIN 
+        DELETE FROM usuario WHERE cedula = PCed ;
+	commit;
+END remover_usuario;
 /
 
 --==============================================
@@ -231,7 +259,12 @@ END;
 /
 
 
-
+CREATE OR REPLACE PROCEDURE remover_curso(PCod in curso.codigo%TYPE) is
+BEGIN 
+        DELETE FROM curso WHERE codigo = PCod ;
+	    commit;
+END remover_curso;
+/
 
 --=========================================================================
 
@@ -288,6 +321,13 @@ RETURN profesor_cursor;
 END;
 /
 
+CREATE OR REPLACE PROCEDURE remover_profe(PCed in profesor.cedula%TYPE) is
+BEGIN 
+        DELETE FROM profesor WHERE cedula = PCed ;
+	    commit;
+END remover_profe;
+/
+
 
 --=========================================================================
 create table alumno(
@@ -309,19 +349,26 @@ alter table alumno add foreign key (cedula) references usuario(cedula);
 alter table alumno add constraint alumno_pk primary key (cedula) using index tablespace MATRICULA_INDICES;
 
 create or replace procedure inserta_alumno(PCed in alumno.cedula%TYPE,Pnombre in alumno.nombre%TYPE,
-Ptel in alumno.telefono%TYPE,Pnac in varchar2) is
+Ptel in alumno.telefono%TYPE,Pnac in alumno.nacimiento%TYPE) is
 begin
-    insert into alumno(cedula,nombre,telefono,nacimiento) values (PCed,Pnombre,Ptel,TO_DATE(Pnac,'dd/mm/yyyy'));
+    insert into alumno(cedula,nombre,telefono,nacimiento) values (PCed,Pnombre,Ptel,Pnac);
 	commit;
 end inserta_alumno;
 /
 
 create or replace procedure actualiza_alumno(PCed in alumno.cedula%TYPE,Pnombre in alumno.nombre%TYPE,
-Ptel in alumno.telefono%TYPE,Pnac in varchar2) is
+Ptel in alumno.telefono%TYPE,Pnac in alumno.nacimiento%TYPE) is
 begin
-    update  alumno set nombre = Pnombre,telefono = Ptel,nacimiento = TO_DATE(Pnac,'dd/mm/yyyy') where cedula = Pced;
+    update  alumno set nombre = Pnombre,telefono = Ptel,nacimiento = Pnac where cedula = Pced;
 	commit;
 end actualiza_alumno;
+/
+
+CREATE OR REPLACE PROCEDURE remover_alumno(PCed in alumno.cedula%TYPE) is
+BEGIN 
+        DELETE FROM alumno WHERE cedula = PCed ;
+	    commit;
+END remover_alumno;
 /
 
 
@@ -374,6 +421,12 @@ begin
 end actualiza_grupo;
 /
 
+CREATE OR REPLACE PROCEDURE remover_grupo(PCod in grupo.codigo%TYPE) is
+BEGIN 
+        DELETE FROM grupo WHERE  codigo = PCod;
+	    commit;
+END remover_grupo;
+/
 --================================================================
 
 create table matriculaCarrera(
@@ -446,6 +499,16 @@ RETURN alumno_cursor;
 END;
 /
 
+CREATE OR REPLACE PROCEDURE remover_matriculaCarr(PIdAlum in matriculaCarrera.idAlu%TYPE,
+PIdCarr in matriculaCarrera.idCarr%TYPE) is
+BEGIN 
+        DELETE FROM matriculaCarrera WHERE  idAlu=PIdAlum and idCarr = PIdCarr;
+	    commit;
+END remover_matriculaCarr;
+/
+
+
+
 --Palumno
 --========================================================
 
@@ -487,15 +550,24 @@ begin
 end actualiza_matricula_grupo;
 /
 
+CREATE OR REPLACE PROCEDURE remover_matriculaGrupo(PIdAlum in matriculaGrupo.idAlumno%TYPE,
+PIDGrup in matriculaGrupo.codGrupo%TYPE) is
+BEGIN 
+        DELETE FROM matriculaGrupo WHERE  idAlumno=PIdAlum and codGrupo = PIDGrup;
+	    commit;
+END remover_matriculaGrupo;
+/
 --================================================================
 
 exec inserta_carrera('INGSYS','Ingieneria en Sistemas','Bachillerato y Diplomado');
 exec inserta_carrera('ENSING','Enseñanza del Ingles','Bachillerato y Licenciatura');
+--exec remover_Carr('INGSYS');
 
 exec inserta_ciclo(2018,1,'03/02/2018','06/06/2018');
 exec inserta_ciclo(2018,2,'20/06/2018','30/10/2018');
 
 exec inserta_curso('EIF01','INGSYS',1,2018,'FUNDAMENTOS DE INFORMATICA',4,6);
+exec inserta_curso('EIF02','INGSYS',1,2018,'AGRICULTURA',4,6);
 
 exec inserta_usuario('111111','CLAVE123','marcos@gmail.com');
 exec inserta_usuario('222222','CLAVE321','hillary@gmail.com');
@@ -520,10 +592,9 @@ exec inserta_matricula_grupo('333333',1,100,'INGSYS');
 exec inserta_matricula_grupo('444444',1,100,'INGSYS');
 
 
+select * from MATRICULA.ciclo c WHERE c.annio = 2018 and c.numero = 1;
 
-
-
---select * from matricula.ciclo;
+select * from MATRICULA.alumno;
 
 
 

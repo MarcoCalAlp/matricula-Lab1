@@ -6,6 +6,7 @@
 package ModelControl;
 
 import BusinessLogic.Profesor;
+import BusinessLogic.Usuario;
 import DataAccess.GlobalException;
 import DataAccess.NoDataException;
 import DataAccess.servicioProfesor;
@@ -45,5 +46,18 @@ public class ModelProfesor {
         return sp.obtenerProfesCedula(cedula);
     }
     
+    public void eliminarProfesor(String cedula) throws GlobalException, NoDataException{
+        sp.eliminarProfesor(cedula);
+        sp.eliminarUsuario(cedula);
+    }
+    
+    public void insertaProfesor(Usuario u,Profesor p) throws GlobalException, NoDataException{
+        sp.insertarUsuario(u.getCedula(), u.getClave(), u.getEmail());
+        sp.insertarProfesor(p.getCedula().getCedula(), p.getNombre(), p.getTelefono());
+    }
+    
+    public void actualizaProfesor(Profesor p) throws GlobalException, NoDataException{
+        sp.actualizarProfesor(p.getCedula().getCedula(), p.getNombre(), p.getTelefono());
+    }
     
 }

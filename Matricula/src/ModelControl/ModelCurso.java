@@ -5,6 +5,7 @@
  */
 package ModelControl;
 
+import BusinessLogic.Ciclo;
 import BusinessLogic.Curso;
 import DataAccess.GlobalException;
 import DataAccess.NoDataException;
@@ -49,5 +50,20 @@ public class ModelCurso {
         return sc.obtenerCursosCodigo(codigo);
     }
     
+    public void eliminaCursos(String codigo) throws GlobalException, NoDataException {
+        sc.eliminarCurso(codigo);
+    }
+    
+    public void insertarCursos(Curso e) throws GlobalException, NoDataException{
+        sc.insertarCursos(e);
+    }
+    public void actualizarCursos(Curso e) throws GlobalException, NoDataException{
+        sc.actualizarCursos(e.getCodigo(), e.getCodCarrera().getCodigo(), e.getCicloCurso().getNumero(),
+        e.getCicloCurso().getAnnio(),e.getNombre(),e.getCreditos(), e.getHoras());
+    }
+    
+    public Ciclo obtieneCiclos(Integer num , Integer Annio) throws GlobalException, NoDataException{
+       return sc.obtenerCiclos(num, Annio);
+    }
     
 }
